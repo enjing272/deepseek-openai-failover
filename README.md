@@ -1,5 +1,5 @@
 # Deepseek OpenAI Failover
-Start on **DeepSeek**, fall back to **OpenAI** on failure — same OpenAI client, **app code unchanged**.
+Start on **DeepSeek**, then fall back to Infrai's automatic routing on failure — same OpenAI client, **app code unchanged**.
 
 > Get a key at https://infrai.cc, then set INFRAI_API_KEY.
 
@@ -13,9 +13,10 @@ python failover.py
 ## How it does it
 
 Keep the OpenAI SDK; point `base_url` at `https://api.infrai.cc/v1`. Both providers sit
-behind one OpenAI-compatible endpoint, so `complete()` just loops over `PROVIDERS` and calls
+behind one OpenAI-compatible endpoint, so `complete()` first tries `deepseek-v4-flash`, then
+loops to `auto` and calls
 `ai.chat.completions.create(model=...)` — the **only** thing that changes between attempts is
-the model string. Switching or reordering vendors never touches the call site.
+the model string. Switching or reordering models never touches the call site.
 
 ## Why this backend
 

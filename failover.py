@@ -1,4 +1,4 @@
-"""Start on DeepSeek; fall back to OpenAI if the primary errors.
+"""Start on DeepSeek; fall back to the gateway's automatic routing.
 
 Because both providers sit behind one OpenAI-compatible endpoint, the only thing
 that changes between attempts is the model string. Your app code stays the same.
@@ -11,9 +11,9 @@ ai = OpenAI(
     api_key=os.environ["INFRAI_API_KEY"],
 )
 
-# Ordered by preference: DeepSeek first, OpenAI as the safety net.
+# Ordered by preference: DeepSeek first, then let the gateway select a fallback.
 # Add more without touching the call site below.
-PROVIDERS = ["deepseek-chat", "gpt-4o-mini"]
+PROVIDERS = ["deepseek-v4-flash", "auto"]
 
 
 def complete(prompt: str) -> str:
